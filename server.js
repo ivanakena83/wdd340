@@ -6,8 +6,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Import models - USING CORRECT PATHS FROM ROOT
-const organizationModel = require('./src/models/organizations');
-const projectModel = require('./src/models/projects');
+const organizationModel = require('./src/models/organization');
+const projectModel = require('./src/models/project');
 const categoryModel = require('./src/models/categories');
 const { testConnection } = require('./src/config/db');
 
