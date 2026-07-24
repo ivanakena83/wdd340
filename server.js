@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
     res.render('index', { title: 'Service Project Directory' });
 });
 
-// Organizations
+// Organizations - with error handling
 app.get('/organizations', async (req, res) => {
     try {
         const organizations = await organizationModel.getAllOrganizations();
@@ -39,7 +39,35 @@ app.get('/organizations', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching organizations:', error);
-        res.status(500).send('Error loading organizations');
+        res.status(500).render('error', { 
+            title: 'Error',
+            message: 'Error loading organizations. Please try again later.'
+        });
+    }
+});
+
+// Individual Organization - with projects
+app.get('/organizations/:id', async (req, res) => {
+    try {
+        const organization = await organizationModel.getOrganizationById(req.params.id);
+        if (!organization) {
+            return res.status(404).render('error', { 
+                title: 'Not Found',
+                message: 'Organization not found'
+            });
+        }
+        const projects = await projectModel.getProjectsByOrganizationId(req.params.id);
+        res.render('organization-detail', { 
+            title: organization.name,
+            organization: organization,
+            projects: projects
+        });
+    } catch (error) {
+        console.error('Error fetching organization details:', error);
+        res.status(500).render('error', { 
+            title: 'Error',
+            message: 'Error loading organization details. Please try again later.'
+        });
     }
 });
 
@@ -53,7 +81,35 @@ app.get('/projects', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching projects:', error);
-        res.status(500).send('Error loading projects');
+        res.status(500).render('error', { 
+            title: 'Error',
+            message: 'Error loading projects. Please try again later.'
+        });
+    }
+});
+
+// Individual Project
+app.get('/projects/:id', async (req, res) => {
+    try {
+        const project = await projectModel.getProjectById(req.params.id);
+        if (!project) {
+            return res.status(404).render('error', { 
+                title: 'Not Found',
+                message: 'Project not found'
+            });
+        }
+        const categories = await categoryModel.getCategoriesByProjectId(req.params.id);
+        res.render('project-detail', { 
+            title: project.title,
+            project: project,
+            categories: categories
+        });
+    } catch (error) {
+        console.error('Error fetching project details:', error);
+        res.status(500).render('error', { 
+            title: 'Error',
+            message: 'Error loading project details. Please try again later.'
+        });
     }
 });
 
@@ -67,7 +123,35 @@ app.get('/categories', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching categories:', error);
-        res.status(500).send('Error loading categories');
+        res.status(500).render('error', { 
+            title: 'Error',
+            message: 'Error loading categories. Please try again later.'
+        });
+    }
+});
+
+// Individual Category with projects
+app.get('/categories/:id', async (req, res) => {
+    try {
+        const category = await categoryModel.getCategoryById(req.params.id);
+        if (!category) {
+            return res.status(404).render('error', { 
+                title: 'Not Found',
+                message: 'Category not found'
+            });
+        }
+        const projects = await projectModel.getProjectsByCategoryId(req.params.id);
+        res.render('category-detail', { 
+            title: category.name,
+            category: category,
+            projects: projects
+        });
+    } catch (error) {
+        console.error('Error fetching category details:', error);
+        res.status(500).render('error', { 
+            title: 'Error',
+            message: 'Error loading category details. Please try again later.'
+        });
     }
 });
 

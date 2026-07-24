@@ -1,9 +1,47 @@
-<%- include('partials/header', { title: title }) %>
-<h1><%= title %></h1>
-<p>Review upcoming service initiatives and project opportunities.</p>
-<ul>
-  <li>Park Cleanup</li>
-  <li>Food Drive</li>
-  <li>Community Tutoring</li>
-</ul>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Service Project Directory</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <div class="logo">🌍 Service Project Directory</div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/organizations">Organizations</a></li>
+                <li><a href="/projects">Projects</a></li>
+                <li><a href="/categories">Categories</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1><%= title %></h1>
+        
+        <% if (projects && projects.length > 0) { %>
+            <div class="card-grid">
+                <% projects.forEach(project => { %>
+                    <div class="card">
+                        <h2><a href="/projects/<%= project.id %>"><%= project.title %></a></h2>
+                        <p><strong>Organization:</strong> <a href="/organizations/<%= project.organization_id %>"><%= project.organization_name %></a></p>
+                        <p><%= project.description ? project.description.substring(0, 150) + '...' : 'No description available' %></p>
+                        <p><strong>Location:</strong> <%= project.location || 'Not specified' %></p>
+                        <p><strong>Project Date:</strong> <%= project.project_date ? new Date(project.project_date).toLocaleDateString() : 'TBD' %></p>
+                        <p class="meta">Created: <%= new Date(project.created_at).toLocaleDateString() %></p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p>No projects found in the database.</p>
+        <% } %>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Service Project Directory. All rights reserved.</p>
+    </footer>
+</body>
+</html>

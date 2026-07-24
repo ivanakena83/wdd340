@@ -3,79 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            line-height: 1.6;
-            color: #2c3e50;
-        }
-        h1 {
-            color: #2c3e50;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
-        }
-        nav {
-            margin: 20px 0;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
-        nav a {
-            margin-right: 15px;
-            text-decoration: none;
-            color: #3498db;
-            font-weight: bold;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        ul li {
-            padding: 8px 0;
-        }
-        ul li a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        ul li a:hover {
-            text-decoration: underline;
-        }
-        footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            color: #7f8c8d;
-            font-size: 0.9em;
-        }
-    </style>
+    <title><%= title %> - Service Project Directory</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <h1><%= title %></h1>
-    
-    <nav>
-        <a href="/">Home</a>
-        <a href="/organizations">Organizations</a>
-        <a href="/projects">Projects</a>
-        <a href="/categories">Categories</a>
-    </nav>
+    <header>
+        <div class="logo">🌍 Service Project Directory</div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/organizations">Organizations</a></li>
+                <li><a href="/projects">Projects</a></li>
+                <li><a href="/categories">Categories</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <p>Welcome to the Service Project Directory. Browse organizations, service projects, and categories.</p>
-
-    <ul>
-        <li><a href="/organizations">View Organizations</a></li>
-        <li><a href="/projects">View Projects</a></li>
-        <li><a href="/categories">View Categories</a></li>
-    </ul>
+    <main>
+        <h1>Welcome to the Service Project Directory</h1>
+        <p>Discover and connect with service organizations, projects, and categories in your community.</p>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h2>🏢 Organizations</h2>
+                <p>Browse through our partner organizations making a difference.</p>
+                <a href="/organizations" class="btn">View Organizations</a>
+            </div>
+            
+            <div class="feature-card">
+                <h2>📋 Projects</h2>
+                <p>Explore service projects and find opportunities to get involved.</p>
+                <a href="/projects" class="btn">View Projects</a>
+            </div>
+            
+            <div class="feature-card">
+                <h2>🏷️ Categories</h2>
+                <p>Discover service areas and find projects that match your interests.</p>
+                <a href="/categories" class="btn">View Categories</a>
+            </div>
+        </div>
+    </main>
 
     <footer>
-        <p>&copy; 2026 Service Project Directory</p>
+        <p>&copy; 2026 Service Project Directory. All rights reserved.</p>
     </footer>
 </body>
 </html>
