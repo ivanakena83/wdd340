@@ -1,5 +1,81 @@
-<%- include('partials/header', { title: title }) %>
-<h1><%= title %></h1>
-<h2>Welcome to the Service Network</h2>
-<p>This site connects organizations, projects, and community categories in one place.</p>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        nav {
+            margin: 20px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            padding: 8px 0;
+        }
+        ul li a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1><%= title %></h1>
+    
+    <nav>
+        <a href="/">Home</a>
+        <a href="/organizations">Organizations</a>
+        <a href="/projects">Projects</a>
+        <a href="/categories">Categories</a>
+    </nav>
+
+    <p>Welcome to the Service Project Directory. Browse organizations, service projects, and categories.</p>
+
+    <ul>
+        <li><a href="/organizations">View Organizations</a></li>
+        <li><a href="/projects">View Projects</a></li>
+        <li><a href="/categories">View Categories</a></li>
+    </ul>
+
+    <footer>
+        <p>&copy; 2026 Service Project Directory</p>
+    </footer>
+</body>
+</html>

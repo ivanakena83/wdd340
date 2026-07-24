@@ -1,38 +1,67 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-dotenv.config();
+const express = require('express');
+const path = require('path');
+require('dotenv').config();
 
 const app = express();
-const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 const PORT = process.env.PORT || 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const organizationModel = require('./src/models/organizations');
+const projectModel = require('./src/models/projects');
+const categoryModel = require('./src/models/categories');
+const { testConnection } = require('./src/config/db');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Home
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Home' });
+    res.render('index', { title: 'Service Project Directory' });
 });
 
-app.get('/organizations', (req, res) => {
-    res.render('organizations', { title: 'Organizations' });
+// Organizations
+app.get('/organizations', async (req, res) => {
+    try {
+        const organizations = await organizationModel.getAllOrganizations();
+        res.render('organizations', { 
+            title: 'Organizations',
+            organizations: organizations
+        });
+    } catch (error) {
+        res.status(500).send('Error loading organizations');
+    }
 });
 
-app.get('/projects', (req, res) => {
-    res.render('projects', { title: 'Projects' });
+// Projects
+app.get('/projects', async (req, res) => {
+    try {
+        const projects = await projectModel.getAllProjects();
+        res.render('projects', { 
+            title: 'Service Projects',
+            projects: projects
+        });
+    } catch (error) {
+        res.status(500).send('Error loading projects');
+    }
 });
 
-app.get('/categories', (req, res) => {
-    res.render('categories', { title: 'Categories' });
+// Categories
+app.get('/categories', async (req, res) => {
+    try {
+        const categories = await categoryModel.getAllCategories();
+        res.render('categories', { 
+            title: 'Service Categories',
+            categories: categories
+        });
+    } catch (error) {
+        res.status(500).send('Error loading categories');
+    }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://127.0.0.1:${PORT}`);
-    console.log(`Environment: ${NODE_ENV}`);
+app.listen(PORT, async () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    await testConnection();
 });

@@ -1,4 +1,103 @@
-<%- include('partials/header') %>
-<h1>Partner Organizations</h1>
-<p>Manage and explore global corporate partners, non-profit institutions, and academic groups driving change.</p>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #27ae60;
+            padding-bottom: 10px;
+        }
+        nav {
+            margin: 20px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .org-card {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+        }
+        .org-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .org-desc {
+            color: #555;
+            margin: 5px 0;
+        }
+        .org-website {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .org-website:hover {
+            text-decoration: underline;
+        }
+        .empty {
+            color: #7f8c8d;
+            font-style: italic;
+            text-align: center;
+            padding: 30px;
+        }
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1><%= title %> (<%= organizations ? organizations.length : 0 %>)</h1>
+    
+    <nav>
+        <a href="/">Home</a>
+        <a href="/organizations">Organizations</a>
+        <a href="/projects">Projects</a>
+        <a href="/categories">Categories</a>
+    </nav>
+
+    <% if (organizations && organizations.length > 0) { %>
+        <% organizations.forEach(org => { %>
+            <div class="org-card">
+                <div class="org-name"><%= org.name %></div>
+                <div class="org-desc"><%= org.description || 'No description available' %></div>
+                <% if (org.website) { %>
+                    <a href="<%= org.website %>" target="_blank" class="org-website">🌐 <%= org.website %></a>
+                <% } %>
+                <div style="color:#7f8c8d; font-size:0.85em; margin-top:5px;">ID: <%= org.id %></div>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <div class="empty">No organizations found.</div>
+    <% } %>
+
+    <footer>
+        <p>&copy; 2026 Service Project Directory</p>
+    </footer>
+</body>
+</html>

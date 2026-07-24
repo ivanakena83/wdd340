@@ -1,19 +1,19 @@
 {
-  "name": "w01-initial-site",
+  "name": "service-project-app",
   "version": "1.0.0",
-  "description": "A simple Express and EJS site for the W01 assignment",
+  "description": "Service Project Directory",
   "main": "server.js",
-  "type": "module",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2"
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "mysql2": "^3.6.0",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.0.1"
   }
 }
