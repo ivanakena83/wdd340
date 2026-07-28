@@ -10,8 +10,9 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Database
+// Database - CORRECT PATH (only once!)
 const db = require('./src/db/index');
 
 // Routes
@@ -58,11 +59,25 @@ app.get('/categories', async (req, res) => {
     }
 });
 
+// Test database connection route
+app.get('/test-db', async (req, res) => {
+    try {
+        const result = await db.query('SELECT NOW() as current_time');
+        res.json({ 
+            success: true, 
+            time: result.rows[0],
+            message: 'Database connected successfully!'
+        });
+    } catch (err) {
+        res.status(500).json({ 
+            success: false, 
+            error: err.message 
+        });
+    }
+});
+
 // Start
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
-// Change this line
-const db = require('./src/db/index');
-// To this
-const db = require('./db/index');
