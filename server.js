@@ -62,3 +62,7 @@ app.get('/categories', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+// Change this line
+const db = require('./src/db/index');
+// To this
+const db = require('./db/index');
