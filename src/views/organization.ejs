@@ -1,0 +1,33 @@
+<%- include('partials/header') %>
+<main>
+    <h1><%= organizationDetails.name %></h1>
+    <% if (user && user.role_name === 'admin') { %>
+        <p><a class="action-link" href="/edit-organization/<%= organizationDetails.organization_id %>">Edit Organization</a></p>
+    <% } %>
+    <div class="detail-layout">
+        <img class="detail-logo" src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> logo">
+        <section>
+            <p><%= organizationDetails.description %></p>
+            <p><strong>Contact:</strong> <a href="mailto:<%= organizationDetails.contact_email %>"><%= organizationDetails.contact_email %></a></p>
+        </section>
+    </div>
+
+    <section>
+        <h2>Service Projects</h2>
+        <% if (projects.length > 0) { %>
+            <ul class="project-list">
+                <% projects.forEach(function(project) { %>
+                    <li class="project-item">
+                        <h3><a href="/project/<%= project.project_id %>"><%= project.title %></a></h3>
+                        <p><strong>Date:</strong> <%= project.date ? new Date(project.date).toLocaleDateString() : 'TBD' %></p>
+                        <p><%= project.description %></p>
+                        <p><em>Location: <%= project.location %></em></p>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No service projects are currently listed for this organization.</p>
+        <% } %>
+    </section>
+</main>
+<%- include('partials/footer') %>

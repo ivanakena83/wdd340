@@ -1,165 +1,88 @@
-const express = require('express');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import session from 'express-session';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import { testConnection } from './src/models/db.js';
+import flash from './src/middleware/flash.js';
+import router from './src/routes.js';
+
+// Load environment variables
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'development';
+const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET || 'development-session-secret';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Import models - USING CORRECT PATHS FROM ROOT
-const organizationModel = require('./src/models/organization');
-const projectModel = require('./src/models/project');
-const categoryModel = require('./src/models/categories');
-const { testConnection } = require('./src/config/db');
-
-// Set view engine
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'src', 'views'));
+app.set('view cache', false);
 
-// Middleware
-app.use(express.static('public'));
-app.use(express.json());
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60 * 60 * 1000 }
+}));
+
+app.use(flash);
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// =============================================
-// ROUTES
-// =============================================
-
-// Home
-app.get('/', (req, res) => {
-    res.render('index', { title: 'Service Project Directory' });
-});
-
-// Organizations - with error handling
-app.get('/organizations', async (req, res) => {
-    try {
-        const organizations = await organizationModel.getAllOrganizations();
-        res.render('organizations', { 
-            title: 'Organizations',
-            organizations: organizations
-        });
-    } catch (error) {
-        console.error('Error fetching organizations:', error);
-        res.status(500).render('error', { 
-            title: 'Error',
-            message: 'Error loading organizations. Please try again later.'
-        });
+app.use((req, res, next) => {
+    if (NODE_ENV === 'development') {
+        console.log(`${req.method} ${req.url}`);
     }
+    next();
 });
 
-// Individual Organization - with projects
-app.get('/organizations/:id', async (req, res) => {
-    try {
-        const organization = await organizationModel.getOrganizationById(req.params.id);
-        if (!organization) {
-            return res.status(404).render('error', { 
-                title: 'Not Found',
-                message: 'Organization not found'
-            });
-        }
-        const projects = await projectModel.getProjectsByOrganizationId(req.params.id);
-        res.render('organization-detail', { 
-            title: organization.name,
-            organization: organization,
-            projects: projects
-        });
-    } catch (error) {
-        console.error('Error fetching organization details:', error);
-        res.status(500).render('error', { 
-            title: 'Error',
-            message: 'Error loading organization details. Please try again later.'
-        });
+app.use((req, res, next) => {
+    res.locals.isLoggedIn = false;
+    if (req.session && req.session.user) {
+        res.locals.isLoggedIn = true;
     }
+
+    res.locals.user = req.session.user || null;
+    res.locals.NODE_ENV = NODE_ENV;
+    next();
 });
 
-// Projects
-app.get('/projects', async (req, res) => {
-    try {
-        const projects = await projectModel.getAllProjects();
-        res.render('projects', { 
-            title: 'Service Projects',
-            projects: projects
-        });
-    } catch (error) {
-        console.error('Error fetching projects:', error);
-        res.status(500).render('error', { 
-            title: 'Error',
-            message: 'Error loading projects. Please try again later.'
-        });
-    }
+app.use(router);
+
+app.use((req, res, next) => {
+    const err = new Error('Page Not Found');
+    err.status = 404;
+    next(err);
 });
 
-// Individual Project
-app.get('/projects/:id', async (req, res) => {
-    try {
-        const project = await projectModel.getProjectById(req.params.id);
-        if (!project) {
-            return res.status(404).render('error', { 
-                title: 'Not Found',
-                message: 'Project not found'
-            });
-        }
-        const categories = await categoryModel.getCategoriesByProjectId(req.params.id);
-        res.render('project-detail', { 
-            title: project.title,
-            project: project,
-            categories: categories
-        });
-    } catch (error) {
-        console.error('Error fetching project details:', error);
-        res.status(500).render('error', { 
-            title: 'Error',
-            message: 'Error loading project details. Please try again later.'
-        });
-    }
-});
+app.use((err, req, res, next) => {
+    console.error('Error occurred:', err.message);
+    console.error('Stack trace:', err.stack);
 
-// Categories
-app.get('/categories', async (req, res) => {
-    try {
-        const categories = await categoryModel.getAllCategories();
-        res.render('categories', { 
-            title: 'Service Categories',
-            categories: categories
-        });
-    } catch (error) {
-        console.error('Error fetching categories:', error);
-        res.status(500).render('error', { 
-            title: 'Error',
-            message: 'Error loading categories. Please try again later.'
-        });
-    }
-});
+    const status = err.status || 500;
+    const template = status === 404 ? '404' : '500';
+    const context = {
+        title: status === 404 ? 'Page Not Found' : 'Server Error',
+        error: err.message,
+        stack: err.stack
+    };
 
-// Individual Category with projects
-app.get('/categories/:id', async (req, res) => {
-    try {
-        const category = await categoryModel.getCategoryById(req.params.id);
-        if (!category) {
-            return res.status(404).render('error', { 
-                title: 'Not Found',
-                message: 'Category not found'
-            });
-        }
-        const projects = await projectModel.getProjectsByCategoryId(req.params.id);
-        res.render('category-detail', { 
-            title: category.name,
-            category: category,
-            projects: projects
-        });
-    } catch (error) {
-        console.error('Error fetching category details:', error);
-        res.status(500).render('error', { 
-            title: 'Error',
-            message: 'Error loading category details. Please try again later.'
-        });
-    }
+    res.status(status).render(`errors/${template}`, context);
 });
-
-// =============================================
-// START SERVER
-// =============================================
 
 app.listen(PORT, async () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    await testConnection();
+    try {
+        await testConnection();
+        console.log(`Server is running at http://127.0.0.1:${PORT}`);
+        console.log(`Environment: ${NODE_ENV}`);
+    } catch (error) {
+        console.error('Failed to connect to the database:', error);
+        process.exit(1); // Exit with a failure code
+    }
 });
