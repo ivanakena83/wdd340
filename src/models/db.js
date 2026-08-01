@@ -1,12 +1,14 @@
 import { Pool } from 'pg';
 import 'dotenv/config';
 
-const connectionString = process.env.DB_URL;
+const connectionString = process.env.DB_URL || process.env.DATABASE_URL;
 
-// Render supplies this full connection string through the DB_URL variable.
+// Use DB_URL in local development and DATABASE_URL on Render or other platforms.
 export const pool = new Pool({
     connectionString,
-    ssl: true
+    ssl: process.env.NODE_ENV === 'production'
+        ? { rejectUnauthorized: false }
+        : false
 });
 
 let db = pool;
