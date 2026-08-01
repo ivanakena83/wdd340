@@ -3,12 +3,11 @@ import 'dotenv/config';
 
 const connectionString = process.env.DB_URL || process.env.DATABASE_URL;
 
-// Use DB_URL in local development and DATABASE_URL on Render or other platforms.
+const shouldUseSsl = Boolean(connectionString && /(render\.com|postgres(?:ql)?\:\/\/.*@.*|amazonaws\.com|sslmode=require)/i.test(connectionString));
+
 export const pool = new Pool({
     connectionString,
-    ssl: process.env.NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : false
+    ssl: shouldUseSsl ? { rejectUnauthorized: false } : false
 });
 
 let db = pool;
