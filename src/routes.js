@@ -1,5 +1,8 @@
 import express from 'express';
+
+import { showHomePage } from './controllers/index.js';
 import {
+    showOrganizationsPage,
     listOrganizations,
     showOrganization,
     newOrganization,
@@ -8,6 +11,7 @@ import {
     updateOrganization
 } from './controllers/organizations.js';
 import {
+    showProjectsPage,
     listProjects,
     showProject,
     newProject,
@@ -18,6 +22,7 @@ import {
     updateCategoryAssignments
 } from './controllers/projects.js';
 import {
+    showCategoriesPage,
     listCategories,
     showCategory,
     newCategory,
@@ -25,36 +30,31 @@ import {
     editCategory,
     updateCategory
 } from './controllers/categories.js';
-import { notFound, handleError } from './controllers/errors.js';
+import { testErrorPage } from './controllers/errors.js';
 
 const router = express.Router();
 
-router.get('/', (req, res) => res.render('home', { title: 'Service Project Manager' }));
-router.get('/register', (req, res) => res.render('register', { title: 'Register' }));
-router.get('/login', (req, res) => res.render('login', { title: 'Login' }));
-
-router.get('/organizations', listOrganizations);
+router.get('/', showHomePage);
+router.get('/organizations', showOrganizationsPage);
 router.get('/organization/:id', showOrganization);
 router.get('/new-organization', newOrganization);
 router.post('/new-organization', createOrganization);
 router.get('/edit-organization/:id', editOrganization);
 router.post('/edit-organization/:id', updateOrganization);
-
-router.get('/projects', listProjects);
+router.get('/projects', showProjectsPage);
 router.get('/project/:id', showProject);
 router.get('/new-project', newProject);
 router.post('/new-project', createProject);
 router.get('/edit-project/:id', editProject);
 router.post('/edit-project/:id', updateProject);
-
-router.get('/categories', listCategories);
+router.get('/categories', showCategoriesPage);
 router.get('/category/:id', showCategory);
 router.get('/new-category', newCategory);
 router.post('/new-category', createCategory);
 router.get('/edit-category/:id', editCategory);
 router.post('/edit-category/:id', updateCategory);
-
 router.get('/assign-categories/:id', assignCategories);
 router.post('/assign-categories/:id', updateCategoryAssignments);
+router.get('/test-error', testErrorPage);
 
 export default router;

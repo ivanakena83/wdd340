@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import router from './src/router.js';
+import router from './src/routes.js';
 import { testConnection } from './src/models/db.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -22,7 +22,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/', router);
+app.use(router);
 
 app.use((req, res) => res.status(404).render('errors/404', { title: 'Not Found' }));
 app.use((error, req, res, next) => {
