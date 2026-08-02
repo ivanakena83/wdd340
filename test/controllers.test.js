@@ -21,6 +21,8 @@ const routerSource = fs.readFileSync(path.join(projectRoot, 'src/routes.js'), 'u
 assert.match(routerSource, /controllers\/organizations\.js/);
 assert.match(routerSource, /controllers\/projects\.js/);
 assert.match(routerSource, /controllers\/categories\.js/);
+assert.match(routerSource, /router\.get\('\/register', showRegisterPage\)/);
+assert.match(routerSource, /router\.get\('\/login', showLoginPage\)/);
 assert.match(routerSource, /router\.get\('\/organizations', showOrganizationsPage\)/);
 assert.match(routerSource, /router\.get\('\/projects', showProjectsPage\)/);
 assert.match(routerSource, /router\.get\('\/categories', showCategoriesPage\)/);

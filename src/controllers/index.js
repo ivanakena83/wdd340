@@ -3,7 +3,15 @@ const showHomePage = async (req, res) => {
     res.render('home', { title });
 };
 
-export { showHomePage };
+const showRegisterPage = (req, res) => {
+    res.render('register', { title: 'Register' });
+};
+
+const showLoginPage = (req, res) => {
+    res.render('login', { title: 'Login' });
+};
+
+export { showHomePage, showRegisterPage, showLoginPage };
 export {
     listOrganizations,
     showOrganization,

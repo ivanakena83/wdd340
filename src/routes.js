@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { showHomePage } from './controllers/index.js';
+import { showHomePage, showRegisterPage, showLoginPage } from './controllers/index.js';
 import {
     showOrganizationsPage,
     listOrganizations,
@@ -35,6 +35,8 @@ import { testErrorPage } from './controllers/errors.js';
 const router = express.Router();
 
 router.get('/', showHomePage);
+router.get('/register', showRegisterPage);
+router.get('/login', showLoginPage);
 router.get('/organizations', showOrganizationsPage);
 router.get('/organization/:id', showOrganization);
 router.get('/new-organization', newOrganization);
