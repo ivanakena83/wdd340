@@ -64,3 +64,12 @@ export const updateOrganization = async (req, res, next) => {
         next(error);
     }
 };
+
+export const showOrganizationsPage = async (req, res, next) => {
+    try {
+        const organizations = await organizationModel.getAllOrganizations();
+        res.render('organizations', { title: 'Organizations', organizations });
+    } catch (error) {
+        next(error);
+    }
+};

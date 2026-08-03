@@ -86,3 +86,12 @@ export const updateCategory = async (req, res, next) => {
         next(error);
     }
 };
+
+export const showCategoriesPage = async (req, res, next) => {
+    try {
+        const categories = await categoryModel.getAllCategories();
+        res.render('categories', { title: 'Categories', categories });
+    } catch (error) {
+        next(error);
+    }
+};

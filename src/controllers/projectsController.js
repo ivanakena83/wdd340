@@ -101,3 +101,12 @@ export const updateCategoryAssignments = async (req, res, next) => {
         next(error);
     }
 };
+
+export const showProjectsPage = async (req, res, next) => {
+    try {
+        const projects = await projectModel.getAllProjects();
+        res.render('projects', { title: 'Service Projects', projects });
+    } catch (error) {
+        next(error);
+    }
+};
