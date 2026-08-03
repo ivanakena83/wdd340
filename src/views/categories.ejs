@@ -3,9 +3,7 @@
     <h1><%= title %></h1>
     <section class="categories">
         <h2>Our Service Categories</h2>
-        <% if (user && user.role_name === 'admin') { %>
-            <p><a class="action-link" href="/new-category">Add a New Category</a></p>
-        <% } %>
+        <p><a class="action-link" href="/new-category">Add a New Category</a></p>
         <div class="category-list">
             <% categories.forEach(function(category) { %>
                 <div class="category-card">

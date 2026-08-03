@@ -9,7 +9,7 @@ import {
     createOrganization,
     editOrganization,
     updateOrganization
-} from './controllers/organizations.js';
+} from './controllers/organizationsController.js';
 import {
     showProjectsPage,
     listProjects,
@@ -20,7 +20,7 @@ import {
     updateProject,
     assignCategories,
     updateCategoryAssignments
-} from './controllers/projects.js';
+} from './controllers/projectsController.js';
 import {
     showCategoriesPage,
     listCategories,
@@ -29,7 +29,7 @@ import {
     createCategory,
     editCategory,
     updateCategory
-} from './controllers/categories.js';
+} from './controllers/categoriesController.js';
 import { testErrorPage } from './controllers/errors.js';
 
 const router = express.Router();

@@ -3,9 +3,17 @@
     <h1><%= title %></h1>
 
     <form action="/new-category" method="POST" class="form-card">
+        <% if (errors && errors.length > 0) { %>
+            <div class="alert error">
+                <% errors.forEach(function(errorMessage) { %>
+                    <p><%= errorMessage %></p>
+                <% }) %>
+            </div>
+        <% } %>
+
         <div class="form-group">
             <label for="name">Category Name</label>
-            <input type="text" id="name" name="name" maxlength="100" required>
+            <input type="text" id="name" name="name" maxlength="100" required value="<%= category.name || '' %>">
         </div>
 
         <button type="submit">Create Category</button>

@@ -1,4 +1,5 @@
 import * as categoryModel from '../models/categories.js';
+import { redirectWithFlash, setFlash, validateCategoryName } from './validation.js';
 
 const id = value => Number.parseInt(value, 10);
 
@@ -32,13 +33,24 @@ export const showCategory = async (req, res, next) => {
 };
 
 export const newCategory = (req, res) => {
-    res.render('new-category', { title: 'New Category' });
+    res.render('new-category', { title: 'New Category', category: {}, errors: [] });
 };
 
 export const createCategory = async (req, res, next) => {
     try {
-        await categoryModel.createCategory(req.body.name);
-        res.redirect('/categories');
+        const { trimmedName, errors } = validateCategoryName(req.body.name);
+
+        if (errors.length > 0) {
+            setFlash(res, 'error', errors[0]);
+            return res.status(400).render('new-category', {
+                title: 'New Category',
+                category: { name: trimmedName },
+                errors
+            });
+        }
+
+        await categoryModel.createCategory(trimmedName);
+        return redirectWithFlash(res, '/categories', 'success', 'Category created successfully.');
     } catch (error) {
         next(error);
     }
@@ -49,7 +61,7 @@ export const editCategory = async (req, res, next) => {
         const category = await categoryModel.getCategoryById(id(req.params.id));
         if (!requireRecord(category, res)) return;
 
-        res.render('edit-category', { title: 'Edit Category', category });
+        res.render('edit-category', { title: 'Edit Category', category, errors: [] });
     } catch (error) {
         next(error);
     }
@@ -57,8 +69,19 @@ export const editCategory = async (req, res, next) => {
 
 export const updateCategory = async (req, res, next) => {
     try {
-        await categoryModel.updateCategory(id(req.params.id), req.body.name);
-        res.redirect(`/category/${req.params.id}`);
+        const { trimmedName, errors } = validateCategoryName(req.body.name);
+
+        if (errors.length > 0) {
+            setFlash(res, 'error', errors[0]);
+            return res.status(400).render('edit-category', {
+                title: 'Edit Category',
+                category: { category_id: id(req.params.id), name: trimmedName },
+                errors
+            });
+        }
+
+        await categoryModel.updateCategory(id(req.params.id), trimmedName);
+        return redirectWithFlash(res, `/category/${req.params.id}`, 'success', 'Category updated successfully.');
     } catch (error) {
         next(error);
     }
