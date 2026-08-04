@@ -1,5 +1,6 @@
 import * as organizationModel from '../models/organizations.js';
 import * as projectModel from '../models/projects.js';
+import { redirectWithFlash } from './validation.js';
 
 const id = value => Number.parseInt(value, 10);
 
@@ -39,7 +40,7 @@ export const newOrganization = (req, res) => {
 export const createOrganization = async (req, res, next) => {
     try {
         await organizationModel.createOrganization(req.body);
-        res.redirect('/organizations');
+        return redirectWithFlash(res, '/organizations', 'success', 'Organization created successfully.');
     } catch (error) {
         next(error);
     }
@@ -59,7 +60,7 @@ export const editOrganization = async (req, res, next) => {
 export const updateOrganization = async (req, res, next) => {
     try {
         await organizationModel.updateOrganization(id(req.params.id), req.body);
-        res.redirect(`/organization/${req.params.id}`);
+        return redirectWithFlash(res, `/organization/${req.params.id}`, 'success', 'Organization updated successfully.');
     } catch (error) {
         next(error);
     }

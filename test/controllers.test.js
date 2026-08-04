@@ -18,9 +18,9 @@ for (const relativePath of requiredFiles) {
 }
 
 const routerSource = fs.readFileSync(path.join(projectRoot, 'src/routes.js'), 'utf8');
-assert.match(routerSource, /controllers\/organizations\.js/);
-assert.match(routerSource, /controllers\/projects\.js/);
-assert.match(routerSource, /controllers\/categories\.js/);
+assert.match(routerSource, /controllers\/organizationsController\.js/);
+assert.match(routerSource, /controllers\/projectsController\.js/);
+assert.match(routerSource, /controllers\/categoriesController\.js/);
 assert.match(routerSource, /router\.get\('\/register', showRegisterPage\)/);
 assert.match(routerSource, /router\.get\('\/login', showLoginPage\)/);
 assert.match(routerSource, /router\.get\('\/organizations', showOrganizationsPage\)/);
@@ -29,9 +29,10 @@ assert.match(routerSource, /router\.get\('\/categories', showCategoriesPage\)/);
 assert.match(routerSource, /router\.get\('\/organization\/:id', showOrganization\)/);
 assert.match(routerSource, /router\.get\('\/project\/:id', showProject\)/);
 assert.match(routerSource, /router\.get\('\/category\/:id', showCategory\)/);
-assert.match(routerSource, /router\.post\('\/new-organization', createOrganization\)/);
-assert.match(routerSource, /router\.post\('\/new-project', createProject\)/);
-assert.match(routerSource, /router\.post\('\/new-category', createCategory\)/);
+assert.match(routerSource, /organizationValidation/);
+assert.match(routerSource, /projectValidation/);
+assert.match(routerSource, /categoryValidation/);
+assert.match(routerSource, /createValidationRedirect/);
 assert.match(routerSource, /router\.get\('\/assign-categories\/:id', assignCategories\)/);
 
 console.log('Controller wiring checks passed.');

@@ -1,5 +1,5 @@
 import * as categoryModel from '../models/categories.js';
-import { redirectWithFlash, setFlash, validateCategoryName } from './validation.js';
+import { redirectWithFlash } from './validation.js';
 
 const id = value => Number.parseInt(value, 10);
 
@@ -38,17 +38,7 @@ export const newCategory = (req, res) => {
 
 export const createCategory = async (req, res, next) => {
     try {
-        const { trimmedName, errors } = validateCategoryName(req.body.name);
-
-        if (errors.length > 0) {
-            setFlash(res, 'error', errors[0]);
-            return res.status(400).render('new-category', {
-                title: 'New Category',
-                category: { name: trimmedName },
-                errors
-            });
-        }
-
+        const trimmedName = typeof req.body.name === 'string' ? req.body.name.trim() : '';
         await categoryModel.createCategory(trimmedName);
         return redirectWithFlash(res, '/categories', 'success', 'Category created successfully.');
     } catch (error) {
@@ -69,17 +59,7 @@ export const editCategory = async (req, res, next) => {
 
 export const updateCategory = async (req, res, next) => {
     try {
-        const { trimmedName, errors } = validateCategoryName(req.body.name);
-
-        if (errors.length > 0) {
-            setFlash(res, 'error', errors[0]);
-            return res.status(400).render('edit-category', {
-                title: 'Edit Category',
-                category: { category_id: id(req.params.id), name: trimmedName },
-                errors
-            });
-        }
-
+        const trimmedName = typeof req.body.name === 'string' ? req.body.name.trim() : '';
         await categoryModel.updateCategory(id(req.params.id), trimmedName);
         return redirectWithFlash(res, `/category/${req.params.id}`, 'success', 'Category updated successfully.');
     } catch (error) {

@@ -18,7 +18,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     res.locals.user = null;
     res.locals.isLoggedIn = false;
-    res.locals.flash = null;
+
+    const flashMessages = {};
+    const queryTypes = ['success', 'error'];
+
+    queryTypes.forEach((type) => {
+        const value = req.query[type];
+        if (typeof value === 'string' && value.trim()) {
+            flashMessages[type] = [decodeURIComponent(value)];
+        }
+    });
+
+    res.locals.flash = Object.keys(flashMessages).length > 0 ? () => flashMessages : null;
     next();
 });
 

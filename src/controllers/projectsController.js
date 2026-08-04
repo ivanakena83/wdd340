@@ -1,6 +1,7 @@
 import * as organizationModel from '../models/organizations.js';
 import * as projectModel from '../models/projects.js';
 import * as categoryModel from '../models/categories.js';
+import { redirectWithFlash } from './validation.js';
 
 const id = value => Number.parseInt(value, 10);
 
@@ -45,7 +46,7 @@ export const newProject = async (req, res, next) => {
 export const createProject = async (req, res, next) => {
     try {
         await projectModel.createProject(req.body);
-        res.redirect('/projects');
+        return redirectWithFlash(res, '/projects', 'success', 'Project created successfully.');
     } catch (error) {
         next(error);
     }
@@ -66,7 +67,7 @@ export const editProject = async (req, res, next) => {
 export const updateProject = async (req, res, next) => {
     try {
         await projectModel.updateProject(id(req.params.id), req.body);
-        res.redirect(`/project/${req.params.id}`);
+        return redirectWithFlash(res, `/project/${req.params.id}`, 'success', 'Project updated successfully.');
     } catch (error) {
         next(error);
     }
@@ -96,7 +97,7 @@ export const updateCategoryAssignments = async (req, res, next) => {
     try {
         const categoryIds = ([]).concat(req.body.categoryIds || []).map(id).filter(Number.isInteger);
         await categoryModel.updateCategoryAssignments(id(req.params.id), categoryIds);
-        res.redirect(`/project/${req.params.id}`);
+        return redirectWithFlash(res, `/project/${req.params.id}`, 'success', 'Category assignments updated successfully.');
     } catch (error) {
         next(error);
     }

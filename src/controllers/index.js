@@ -19,7 +19,7 @@ export {
     createOrganization,
     editOrganization,
     updateOrganization
-} from './organizations.js';
+} from './organizationsController.js';
 
 export {
     listProjects,
@@ -30,7 +30,7 @@ export {
     updateProject,
     assignCategories,
     updateCategoryAssignments
-} from './projects.js';
+} from './projectsController.js';
 
 export {
     listCategories,
@@ -39,6 +39,6 @@ export {
     createCategory,
     editCategory,
     updateCategory
-} from './categories.js';
+} from './categoriesController.js';
 
 export { notFound, handleError } from './errors.js';
