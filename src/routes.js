@@ -1,6 +1,9 @@
 import express from 'express';
 
 import { showHomePage, showRegisterPage, showLoginPage } from './controllers/index.js';
+import { registerUser, loginUser, logoutUser, showDashboard } from './controllers/authController.js';
+import { showUsersPage } from './controllers/usersController.js';
+import { requireLogin, requireRole } from './middleware/auth.js';
 import {
     showOrganizationsPage,
     showOrganization,
@@ -34,7 +37,12 @@ const router = express.Router();
 
 router.get('/', showHomePage);
 router.get('/register', showRegisterPage);
+router.post('/register', registerUser);
 router.get('/login', showLoginPage);
+router.post('/login', loginUser);
+router.get('/logout', logoutUser);
+
+router.get('/dashboard', requireLogin, showDashboard);
 router.get('/organizations', showOrganizationsPage);
 router.get('/organization/:id', showOrganization);
 router.get('/new-organization', newOrganization);
@@ -56,5 +64,6 @@ router.post('/edit-category/:id', categoryValidation, createValidationRedirect(r
 router.get('/assign-categories/:id', assignCategories);
 router.post('/assign-categories/:id', categoryAssignmentValidation, createValidationRedirect(req => `/project/${req.params.id}`), updateCategoryAssignments);
 router.get('/test-error', testErrorPage);
+router.get('/users', requireLogin, requireRole('admin'), showUsersPage);
 
 export default router;

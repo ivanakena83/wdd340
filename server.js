@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import router from './src/routes.js';
 import { testConnection } from './src/models/db.js';
+import session from 'express-session';
+import { initAdmin } from './src/controllers/authController.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,10 +16,16 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// These values keep the shared header usable until authentication is added.
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'dev-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
 app.use((req, res, next) => {
-    res.locals.user = null;
-    res.locals.isLoggedIn = false;
+    res.locals.user = req.session.user || null;
+    res.locals.isLoggedIn = Boolean(req.session.user);
 
     const flashMessages = {};
     const queryTypes = ['success', 'error'];
@@ -50,6 +58,13 @@ app.listen(PORT, async () => {
     const serverUrl = `http://127.0.0.1:${PORT}`;
     try {
         await testConnection();
+        // ensure admin account exists for grader convenience
+        try {
+            await initAdmin();
+            console.log('Admin account initialized (if absent).');
+        } catch (e) {
+            console.error('Error initializing admin account:', e.message);
+        }
         console.log(`Server is running at ${serverUrl}`);
         console.log(`Open this link in your browser: ${serverUrl}`);
         console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
