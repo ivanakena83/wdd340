@@ -20,7 +20,9 @@ import {
     editProject,
     updateProject,
     assignCategories,
-    updateCategoryAssignments
+    updateCategoryAssignments,
+    volunteerForProject,
+    removeVolunteerFromProject
 } from './controllers/projectsController.js';
 import {
     showCategoriesPage,
@@ -51,6 +53,8 @@ router.get('/edit-organization/:id', requireLogin, requireRole('admin'), editOrg
 router.post('/edit-organization/:id', requireLogin, requireRole('admin'), organizationValidation, createValidationRedirect(req => `/edit-organization/${req.params.id}`), updateOrganization);
 router.get('/projects', showProjectsPage);
 router.get('/project/:id', showProject);
+router.post('/project/:id/volunteer', requireLogin, volunteerForProject);
+router.post('/project/:id/volunteer/remove', requireLogin, removeVolunteerFromProject);
 router.get('/new-project', requireLogin, requireRole('admin'), newProject);
 router.post('/new-project', requireLogin, requireRole('admin'), projectValidation, createValidationRedirect('/new-project'), createProject);
 router.get('/edit-project/:id', requireLogin, requireRole('admin'), editProject);

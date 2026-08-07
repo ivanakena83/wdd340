@@ -39,10 +39,13 @@ assert.match(routerSource, /router\.post\('\/new-organization', requireLogin, re
 assert.match(routerSource, /router\.get\('\/new-project', requireLogin, requireRole\('admin'\), newProject\)/);
 assert.match(routerSource, /router\.get\('\/new-category', requireLogin, requireRole\('admin'\), newCategory\)/);
 assert.match(routerSource, /router\.get\('\/edit-category\/:id', requireLogin, requireRole\('admin'\), editCategory\)/);
+assert.match(routerSource, /router\.post\('\/project\/:id\/volunteer', requireLogin, volunteerForProject\)/);
+assert.match(routerSource, /router\.post\('\/project\/:id\/volunteer\/remove', requireLogin, removeVolunteerFromProject\)/);
 
 const setupSqlSource = fs.readFileSync(path.join(projectRoot, 'src/setup.sql'), 'utf8');
 assert.match(setupSqlSource, /CREATE TABLE public\.role/);
 assert.match(setupSqlSource, /CREATE TABLE public\.app_user/);
+assert.match(setupSqlSource, /CREATE TABLE public\.project_volunteer/);
 assert.match(setupSqlSource, /INSERT INTO public\.role/);
 
 console.log('Controller wiring checks passed.');

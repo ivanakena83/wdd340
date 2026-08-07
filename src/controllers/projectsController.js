@@ -1,6 +1,7 @@
 import * as organizationModel from '../models/organizations.js';
 import * as projectModel from '../models/projects.js';
 import * as categoryModel from '../models/categories.js';
+import { addVolunteer, isUserVolunteeringForProject, removeVolunteer } from '../models/volunteers.js';
 import { redirectWithFlash } from './validation.js';
 
 const id = value => Number.parseInt(value, 10);
@@ -28,7 +29,10 @@ export const showProject = async (req, res, next) => {
         if (!requireRecord(project, res)) return;
 
         const categories = await categoryModel.getCategoriesByProjectId(project.project_id);
-        res.render('project', { title: project.title, project, categories, isVolunteering: false });
+        const isVolunteering = req.session?.user?.user_id
+            ? await isUserVolunteeringForProject(project.project_id, req.session.user.user_id)
+            : false;
+        res.render('project', { title: project.title, project, categories, isVolunteering });
     } catch (error) {
         next(error);
     }
@@ -107,6 +111,37 @@ export const showProjectsPage = async (req, res, next) => {
     try {
         const projects = await projectModel.getAllProjects();
         res.render('projects', { title: 'Service Projects', projects });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const volunteerForProject = async (req, res, next) => {
+    try {
+        const projectId = id(req.params.id);
+        const userId = req.session?.user?.user_id;
+        if (!userId) {
+            return redirectWithFlash(res, '/login', 'error', 'You must be logged in to volunteer.');
+        }
+
+        await addVolunteer(projectId, userId);
+        return redirectWithFlash(res, `/project/${projectId}`, 'success', 'You are now volunteering for this project.');
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const removeVolunteerFromProject = async (req, res, next) => {
+    try {
+        const projectId = id(req.params.id);
+        const userId = req.session?.user?.user_id;
+        if (!userId) {
+            return redirectWithFlash(res, '/login', 'error', 'You must be logged in to remove your volunteer signup.');
+        }
+
+        await removeVolunteer(projectId, userId);
+        const returnTo = req.body.returnTo === 'dashboard' ? '/dashboard' : `/project/${projectId}`;
+        return redirectWithFlash(res, returnTo, 'success', 'Your volunteer signup was removed.');
     } catch (error) {
         next(error);
     }
