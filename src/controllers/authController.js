@@ -1,5 +1,4 @@
-import { findByEmail, createUser, ensureAdminAccount } from '../models/users.js';
-import bcrypt from 'bcrypt';
+import { findByEmail, createUser, ensureAdminAccount, authenticateUser } from '../models/users.js';
 
 export const registerUser = async (req, res, next) => {
     try {
@@ -14,9 +13,8 @@ export const registerUser = async (req, res, next) => {
         }
 
         const created = await createUser({ name, email, password });
-        // set session
         req.session.user = { name: created.name || name, email: created.email || email, role_name: created.role_name || 'user' };
-        req.session.save(() => res.redirect('/dashboard'));
+        req.session.save(() => res.redirect('/dashboard?success=' + encodeURIComponent('Registration successful. Welcome!')));
     } catch (err) {
         next(err);
     }
@@ -25,11 +23,8 @@ export const registerUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        const user = await findByEmail(email);
+        const user = await authenticateUser(email, password);
         if (!user) return res.redirect('/login?error=' + encodeURIComponent('Invalid email or password.'));
-
-        const match = await bcrypt.compare(password, user.password || '');
-        if (!match) return res.redirect('/login?error=' + encodeURIComponent('Invalid email or password.'));
 
         req.session.user = { name: user.name, email: user.email, role_name: user.role_name || 'user' };
         req.session.save(() => res.redirect('/dashboard'));
