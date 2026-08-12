@@ -3,11 +3,11 @@ import 'dotenv/config';
 
 const connectionString = process.env.DB_URL || process.env.DATABASE_URL;
 
-const shouldUseSsl = Boolean(connectionString && /(render\.com|postgres(?:ql)?\:\/\/.*@.*|amazonaws\.com|sslmode=require)/i.test(connectionString));
+const shouldUseSsl = Boolean(connectionString && /(render\.com|amazonaws\.com|sslmode=require)/i.test(connectionString));
 
 export const pool = new Pool({
     connectionString,
-    ssl: shouldUseSsl ? { rejectUnauthorized: false } : false
+    ...(shouldUseSsl ? { ssl: { rejectUnauthorized: false } } : {})
 });
 
 let db = pool;
