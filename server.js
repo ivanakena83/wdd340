@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import router from './src/routes.js';
 import { testConnection } from './src/models/db.js';
+import { ensureSchema } from './src/models/schema.js';
 import session from 'express-session';
 import { initAdmin } from './src/controllers/authController.js';
 
@@ -58,6 +59,8 @@ app.listen(PORT, async () => {
     const serverUrl = `http://127.0.0.1:${PORT}`;
     try {
         await testConnection();
+        // create missing tables so registration/login always work
+        await ensureSchema();
         // ensure admin account exists for grader convenience
         try {
             await initAdmin();

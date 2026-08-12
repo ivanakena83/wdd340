@@ -33,7 +33,7 @@ assert.match(routerSource, /organizationValidation/);
 assert.match(routerSource, /projectValidation/);
 assert.match(routerSource, /categoryValidation/);
 assert.match(routerSource, /createValidationRedirect/);
-assert.match(routerSource, /router\.get\('\/assign-categories\/:id', assignCategories\)/);
+assert.match(routerSource, /router\.get\('\/assign-categories\/:id', requireLogin, requireRole\('admin'\), assignCategories\)/);
 assert.match(routerSource, /router\.get\('\/new-organization', requireLogin, requireRole\('admin'\), newOrganization\)/);
 assert.match(routerSource, /router\.post\('\/new-organization', requireLogin, requireRole\('admin'\), organizationValidation/);
 assert.match(routerSource, /router\.get\('\/new-project', requireLogin, requireRole\('admin'\), newProject\)/);

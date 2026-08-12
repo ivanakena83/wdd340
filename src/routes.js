@@ -65,8 +65,8 @@ router.get('/new-category', requireLogin, requireRole('admin'), newCategory);
 router.post('/new-category', requireLogin, requireRole('admin'), categoryValidation, createValidationRedirect('/new-category'), createCategory);
 router.get('/edit-category/:id', requireLogin, requireRole('admin'), editCategory);
 router.post('/edit-category/:id', requireLogin, requireRole('admin'), categoryValidation, createValidationRedirect(req => `/edit-category/${req.params.id}`), updateCategory);
-router.get('/assign-categories/:id', assignCategories);
-router.post('/assign-categories/:id', categoryAssignmentValidation, createValidationRedirect(req => `/project/${req.params.id}`), updateCategoryAssignments);
+router.get('/assign-categories/:id', requireLogin, requireRole('admin'), assignCategories);
+router.post('/assign-categories/:id', requireLogin, requireRole('admin'), categoryAssignmentValidation, createValidationRedirect(req => `/project/${req.params.id}`), updateCategoryAssignments);
 router.get('/test-error', testErrorPage);
 router.get('/users', requireLogin, requireRole('admin'), showUsersPage);
 
