@@ -143,7 +143,12 @@ VALUES
  'Back-to-School Drive Prep',
  'Organize backpacks, notebooks, and supplies for distribution.',
  'UnityServe Warehouse',
- '2026-07-10');
+ '2026-07-10'),
+ ((SELECT organization_id FROM public.organization WHERE name = 'UnityServe Volunteers'),
+ 'Senior Companion Visit',
+ 'Visit seniors at Maple Grove Senior Housing to provide companionship and assistance with daily tasks.',
+ 'Maple Grove Senior Housing',
+ '2026-07-17');
 
 CREATE TABLE public.category
 (
@@ -231,4 +236,8 @@ VALUES
  ((SELECT project_id FROM public.project WHERE title = 'Back-to-School Drive Prep'),
  (SELECT category_id FROM public.category WHERE name = 'Educational')),
  ((SELECT project_id FROM public.project WHERE title = 'Back-to-School Drive Prep'),
- (SELECT category_id FROM public.category WHERE name = 'Community Service'));
+ (SELECT category_id FROM public.category WHERE name = 'Community Service')),
+ ((SELECT project_id FROM public.project WHERE title = 'Senior Companion Visit'),
+ (SELECT category_id FROM public.category WHERE name = 'Community Service')),
+ ((SELECT project_id FROM public.project WHERE title = 'Senior Companion Visit'),
+ (SELECT category_id FROM public.category WHERE name = 'Health and Wellness'));
